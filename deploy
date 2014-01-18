@@ -1,0 +1,5 @@
+#!/bin/sh
+
+git pull origin master
+mvn package
+cp ./target/weiweb.war /root/Env/apache-tomcat-7.0.50/webapps/
