@@ -17,7 +17,7 @@ import java.util.Arrays;
  * 
  */
 public class SignUtil {
-	private static String token = "weixinCourse";
+	private static String token = "weiweb";
 
 	/**
 	 * 验证签名
