@@ -28,9 +28,9 @@ public class CoreController {
 		String nonce = request.getParameter("nonce");
 		// 随机字符串
 		String echostr = request.getParameter("echostr");
-		logger.debug(signature + "-" + timestamp + "-" + nonce + "-" + echostr);
+		logger.info(signature + "-" + timestamp + "-" + nonce + "-" + echostr);
 		if (SignUtil.checkSignature(signature, timestamp, nonce)) {
-			logger.debug("sign success....");
+			logger.info("sign success....");
 			return echostr;
 		}
 		return "";
