@@ -9,13 +9,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sunny.weiweb.utils.SignUtil;
+
 @Controller
-public class TestController {
+public class CoreController {
 
 	@ResponseBody
-	@RequestMapping(value = "/getString.do", method = { RequestMethod.POST, RequestMethod.GET })
-	public String getString(@RequestParam("name") String name, HttpServletRequest request, HttpServletResponse response) {
-		return name;
+	@RequestMapping(value = "/Core.do", method = { RequestMethod.POST, RequestMethod.GET })
+	public String getString(@RequestParam("signature") String signature, @RequestParam("timestamp") String timestamp, @RequestParam("nonce") String nonce, @RequestParam("echostr") String echostr) {
+		if (SignUtil.checkSignature(signature, timestamp, nonce)) {
+			return echostr;
+		}
+		return "";
 	}
 
 	@RequestMapping(value = "/toJsp.do", method = { RequestMethod.POST, RequestMethod.GET })
