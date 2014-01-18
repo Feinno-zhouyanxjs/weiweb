@@ -30,6 +30,7 @@ public class CoreController {
 		String echostr = request.getParameter("echostr");
 		logger.debug(signature + "-" + timestamp + "-" + nonce + "-" + echostr);
 		if (SignUtil.checkSignature(signature, timestamp, nonce)) {
+			logger.debug("sign success....");
 			return echostr;
 		}
 		return "";
