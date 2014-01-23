@@ -18,8 +18,8 @@ public class CoreController {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@ResponseBody
-	@RequestMapping(value = "/Core.do", method = { RequestMethod.POST, RequestMethod.GET })
-	public String getString(HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "/Core.do", method = RequestMethod.GET)
+	public String sign(HttpServletRequest request, HttpServletResponse response) {
 		// 微信加密签名
 		String signature = request.getParameter("signature");
 		// 时间戳
@@ -36,8 +36,14 @@ public class CoreController {
 		return "";
 	}
 
-	@RequestMapping(value = "/toJsp.do", method = { RequestMethod.POST, RequestMethod.GET })
-	public String toJsp(HttpServletRequest request, HttpServletResponse response) {
+	@ResponseBody
+	@RequestMapping(value = "/Core.do", method = RequestMethod.POST)
+	public String message(HttpServletRequest request, HttpServletResponse response) {
+		return "";
+	}
+
+	@RequestMapping(value = "/Snoop.do", method = { RequestMethod.GET, RequestMethod.POST })
+	public String snoop() {
 		return "snoop.jsp";
 	}
 }
