@@ -12,7 +12,7 @@ package com.sunny.weiweb.message;
  * @author <a href="mailto:zhouyan@pzoomtech.com">ZhouYan</a>.
  * 
  */
-public abstract class RequestMessage {
+public class RequestMessage {
 
 	private String toUserName;
 
@@ -114,6 +114,16 @@ public abstract class RequestMessage {
 	 */
 	public void setMsgId(long msgId) {
 		this.msgId = msgId;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "RequestMessage [toUserName=" + toUserName + ", fromUserName=" + fromUserName + ", createTime=" + createTime + ", msgType=" + msgType + ", msgId=" + msgId + ", content=" + content + "]";
 	}
 
 }
