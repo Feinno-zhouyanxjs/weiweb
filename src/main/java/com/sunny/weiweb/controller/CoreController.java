@@ -45,14 +45,13 @@ public class CoreController {
 	@ResponseBody
 	@RequestMapping(value = "/Core.do", method = RequestMethod.POST)
 	public String message(HttpServletRequest request, HttpServletResponse response) {
+		// response.setContentType("text/plain;charset=UTF-8");
 		logger.info("received a message request.....");
 		try {
 			String res = msgService.process(request);
 			logger.info(res);
 			return res;
-		} catch (IOException e) {
-			logger.error("process message. ", e);
-		} catch (DocumentException e) {
+		} catch (IOException | DocumentException e) {
 			logger.error("process message. ", e);
 		}
 		return "";
