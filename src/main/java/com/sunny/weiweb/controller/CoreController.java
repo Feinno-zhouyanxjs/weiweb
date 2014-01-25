@@ -59,6 +59,12 @@ public class CoreController {
 		return "";
 	}
 
+	@ResponseBody
+	@RequestMapping(value = "/Test.do", method = { RequestMethod.POST, RequestMethod.GET })
+	public String test(HttpServletRequest request, HttpServletResponse response) {
+		return "中文";
+	}
+
 	@RequestMapping(value = "/Snoop.do", method = { RequestMethod.GET, RequestMethod.POST })
 	public String snoop(HttpServletRequest request, HttpServletResponse response) {
 		return "snoop.jsp";
