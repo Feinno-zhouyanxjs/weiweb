@@ -50,7 +50,9 @@ public class CoreController {
 			String res = msgService.process(request);
 			logger.info(res);
 			return res;
-		} catch (IOException | DocumentException e) {
+		} catch (IOException e) {
+			logger.error("process message. ", e);
+		} catch (DocumentException e) {
 			logger.error("process message. ", e);
 		}
 		return "";
