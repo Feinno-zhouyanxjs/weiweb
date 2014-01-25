@@ -57,7 +57,7 @@ public class CoreController {
 	}
 
 	@RequestMapping(value = "/Snoop.do", method = { RequestMethod.GET, RequestMethod.POST })
-	public String snoop() {
+	public String snoop(HttpServletRequest request, HttpServletResponse response) {
 		return "snoop.jsp";
 	}
 }
