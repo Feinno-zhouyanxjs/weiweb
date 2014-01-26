@@ -4,8 +4,8 @@
 package com.sunny.weiweb.message;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -44,8 +44,8 @@ public class Code {
 	}
 
 	public Request decode(HttpServletRequest request) throws IOException, DocumentException {
-		// InputStream in = request.getInputStream();
-		FileInputStream in = new FileInputStream("/Users/sunny/Desktop/request");
+		InputStream in = request.getInputStream();
+		// FileInputStream in = new FileInputStream("/Users/sunny/Desktop/request");
 		SAXReader saxReader = new SAXReader();
 		Document document = saxReader.read(in);
 		in.close();
