@@ -8,6 +8,9 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+	<listener>
+		<listener-class>com.sunny.weiweb.sys.ServiceInitListener</listener-class>
+	</listener>
 	<servlet>
 		<servlet-name>weiweb</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>

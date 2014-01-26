@@ -12,9 +12,15 @@ import org.dom4j.DocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sunny.weiweb.command.CommandExecuter;
+import com.sunny.weiweb.command.HelpCommand;
 import com.sunny.weiweb.message.Code;
-import com.sunny.weiweb.message.RequestMessage;
-import com.sunny.weiweb.message.ResponseMessage;
+import com.sunny.weiweb.message.EventType;
+import com.sunny.weiweb.message.MessageType;
+import com.sunny.weiweb.message.Request;
+import com.sunny.weiweb.message.RequestEvent;
+import com.sunny.weiweb.message.RequestText;
+import com.sunny.weiweb.message.ResponseText;
 
 /**
  * 
@@ -32,19 +38,35 @@ public class MessageService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	public String process(HttpServletRequest request) throws IOException, DocumentException {
-		RequestMessage req = coder.decode(request);
+		Request req = coder.decode(request);
 		if (req == null) {
 			logger.info("request message is null.");
 			return "";
 		}
 		logger.info(req.toString());
-		ResponseMessage resp = new ResponseMessage();
-		resp.setContent(req.getContent());
+
+		ResponseText resp = new ResponseText();
 		resp.setCreateTime(new Date().getTime());
 		resp.setFromUserName(req.getToUserName());
-		resp.setMsgType(req.getMsgType());
+		resp.setMsgType(MessageType.text.name());
 		resp.setToUserName(req.getFromUserName());
-		return coder.encode(resp);
+
+		if (req.getMsgType().equals(MessageType.text.name())) {
+			RequestText reqtext = (RequestText) req;
+			resp.setContent(CommandExecuter.cmd(reqtext.getContent()));
+			return coder.encode(resp);
+		} else if (req.getMsgType().equals(MessageType.event.name())) {
+			RequestEvent reqEvent = (RequestEvent) req;
+			if (reqEvent.getEvent().equals(EventType.subscribe.name())) {
+				HelpCommand help = new HelpCommand();
+				resp.setContent("欢迎关注品众小助手," + help.execute(null));
+				return coder.encode(resp);
+			} else {
+				return "";
+			}
+		} else {
+			return "";
+		}
 	}
 
 }

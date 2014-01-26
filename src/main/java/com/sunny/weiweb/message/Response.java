@@ -5,14 +5,14 @@ package com.sunny.weiweb.message;
 
 /**
  * 
- * 响应消息基础类
+ * 响应基类
  * 
- * Create on Jan 23, 2014 9:51:42 PM
+ * Create on Jan 26, 2014 10:59:11 AM
  * 
  * @author <a href="mailto:zhouyan@pzoomtech.com">ZhouYan</a>.
  * 
  */
-public class ResponseMessage {
+public abstract class Response {
 
 	private String toUserName;
 
@@ -21,23 +21,6 @@ public class ResponseMessage {
 	private long createTime;
 
 	private String msgType;
-
-	private String content;
-
-	/**
-	 * @return the content
-	 */
-	public String getContent() {
-		return content;
-	}
-
-	/**
-	 * @param content
-	 *            the content to set
-	 */
-	public void setContent(String content) {
-		this.content = content;
-	}
 
 	/**
 	 * @return the toUserName

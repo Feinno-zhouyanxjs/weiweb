@@ -22,15 +22,19 @@ public class TestCode {
 	@Test
 	public void testDecode() throws IOException, DocumentException {
 		Code code = new Code();
-		RequestMessage rm = code.decode(null);
+		Request rm = code.decode(null);
 		System.out.println(rm);
+		if (rm.getMsgType().equals(MessageType.event.name())) {
+			RequestSubscribe sr = (RequestSubscribe) rm;
+			System.out.println(sr.toString());
+		}
 
-		ResponseMessage rem = new ResponseMessage();
-		rem.setContent("1122");
-		rem.setCreateTime(new Date().getTime());
-		rem.setFromUserName("zhouyan");
-		rem.setMsgType("text");
-		rem.setToUserName("bingbing");
-		System.out.println(code.encode(rem));
+		// ResponseText rem = new ResponseText();
+		// rem.setContent("1122");
+		// rem.setCreateTime(new Date().getTime());
+		// rem.setFromUserName("zhouyan");
+		// rem.setMsgType("text");
+		// rem.setToUserName("bingbing");
+		// System.out.println(code.encode(rem));
 	}
 }

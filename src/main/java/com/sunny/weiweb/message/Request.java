@@ -7,12 +7,12 @@ package com.sunny.weiweb.message;
  * 
  * 请求消息基类
  * 
- * Create on Jan 23, 2014 9:46:02 PM
+ * Create on Jan 26, 2014 10:55:38 AM
  * 
  * @author <a href="mailto:zhouyan@pzoomtech.com">ZhouYan</a>.
  * 
  */
-public class RequestMessage {
+public abstract class Request {
 
 	private String toUserName;
 
@@ -21,25 +21,6 @@ public class RequestMessage {
 	private long createTime;
 
 	private String msgType;
-
-	private long msgId;
-
-	private String content;
-
-	/**
-	 * @return the content
-	 */
-	public String getContent() {
-		return content;
-	}
-
-	/**
-	 * @param content
-	 *            the content to set
-	 */
-	public void setContent(String content) {
-		this.content = content;
-	}
 
 	/**
 	 * @return the toUserName
@@ -101,21 +82,6 @@ public class RequestMessage {
 		this.msgType = msgType;
 	}
 
-	/**
-	 * @return the msgId
-	 */
-	public long getMsgId() {
-		return msgId;
-	}
-
-	/**
-	 * @param msgId
-	 *            the msgId to set
-	 */
-	public void setMsgId(long msgId) {
-		this.msgId = msgId;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -123,7 +89,7 @@ public class RequestMessage {
 	 */
 	@Override
 	public String toString() {
-		return "RequestMessage [toUserName=" + toUserName + ", fromUserName=" + fromUserName + ", createTime=" + createTime + ", msgType=" + msgType + ", msgId=" + msgId + ", content=" + content + "]";
+		return "Request [toUserName=" + toUserName + ", fromUserName=" + fromUserName + ", createTime=" + createTime + ", msgType=" + msgType + "]";
 	}
 
 }

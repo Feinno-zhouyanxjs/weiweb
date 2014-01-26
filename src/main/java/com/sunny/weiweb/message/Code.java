@@ -4,8 +4,8 @@
 package com.sunny.weiweb.message;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,7 +27,7 @@ import org.dom4j.io.XMLWriter;
  */
 public class Code {
 
-	public String encode(ResponseMessage resp) throws IOException {
+	public String encode(ResponseText resp) throws IOException {
 		Document document = DocumentHelper.createDocument();
 		Element root = document.addElement("xml");
 		root.addElement("ToUserName").addCDATA(resp.getToUserName());
@@ -43,9 +43,9 @@ public class Code {
 		return new String(strout.toByteArray());
 	}
 
-	public RequestMessage decode(HttpServletRequest request) throws IOException, DocumentException {
-		InputStream in = request.getInputStream();
-		// FileInputStream in = new FileInputStream("/Users/sunny/Desktop/request");
+	public Request decode(HttpServletRequest request) throws IOException, DocumentException {
+		// InputStream in = request.getInputStream();
+		FileInputStream in = new FileInputStream("/Users/sunny/Desktop/request");
 		SAXReader saxReader = new SAXReader();
 		Document document = saxReader.read(in);
 		in.close();
@@ -56,17 +56,31 @@ public class Code {
 		String fromUserName = root.elementText("FromUserName");
 		String createTime = root.elementText("CreateTime");
 		String msgId = root.elementText("MsgId");
-		if (type.equals("text")) {
-			RequestMessage msg = new RequestMessage();
-			msg.setContent(root.elementText("Content"));
-			msg.setCreateTime(Long.valueOf(createTime));
-			msg.setFromUserName(fromUserName);
-			msg.setMsgId(Long.valueOf(msgId));
-			msg.setToUserName(toUserName);
-			msg.setMsgType("text");
-			return msg;
+
+		Request msg = null;
+
+		if (type.equals(MessageType.text.name())) {
+			msg = new RequestText();
+			msg.setMsgType(type);
+			RequestText rt = (RequestText) msg;
+			rt.setContent(root.elementText("Content"));
+			rt.setMsgId(Long.valueOf(msgId));
+		} else if (type.equals(MessageType.event.name())) {
+			String event = root.elementText("Event");
+			if (event.equals(EventType.subscribe.name())) {
+				msg = new RequestSubscribe();
+				msg.setMsgType(type);
+				RequestSubscribe sr = (RequestSubscribe) msg;
+				sr.setEvent(event);
+			} else {
+				return null;
+			}
 		} else {
 			return null;
 		}
+		msg.setCreateTime(Long.valueOf(createTime));
+		msg.setFromUserName(fromUserName);
+		msg.setToUserName(toUserName);
+		return msg;
 	}
 }
