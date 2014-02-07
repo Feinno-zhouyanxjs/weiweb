@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.pzoom.database.DataTable;
 import com.pzoom.database.Database;
 import com.sunny.weiweb.message.RequestText;
 import com.sunny.weiweb.sys.StringConstant;
@@ -45,7 +44,7 @@ public class AliasCommand implements Command {
 				// }
 				int r = db.executeUpdate(cmd, args[0].trim(), request.getFromUserName());
 				if (r == 1) {
-					return "感谢" + args[0].trim() + "同学关注我.如果您对我有什么意见请联系我zhouyan@pzoomtech.com，我会积极改进.";
+					return "感谢" + args[0].trim() + "同学关注.如果您对我有什么意见请告诉我，我会积极改进.";
 				} else {
 					return StringConstant.InternalError;
 				}

@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sunny.weiweb.command.CommandExecuter;
-import com.sunny.weiweb.command.HelpCommand;
 import com.sunny.weiweb.message.Code;
 import com.sunny.weiweb.message.EventType;
 import com.sunny.weiweb.message.MessageType;
