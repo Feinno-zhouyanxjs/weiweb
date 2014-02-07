@@ -5,10 +5,16 @@ package com.sunny.weiweb.command;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.pzoom.database.DBConnectionManager;
+import com.pzoom.database.Database;
+import com.sunny.weiweb.message.RequestText;
+import com.sunny.weiweb.sys.StringConstant;
 
 /**
  * 
@@ -22,11 +28,17 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CommandExecuter {
 
 	/**
+	 * 数据库操作接口
+	 */
+	private static Database db;
+
+	/**
 	 * 命令处理器缓存
 	 */
 	private static ConcurrentHashMap<String, Command> cmds = new ConcurrentHashMap<String, Command>();
 
-	public static void init() throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public static void init() throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+		// 初始化命令映射表
 		InputStream in = CommandExecuter.class.getClassLoader().getResourceAsStream("mapping.properties");
 		Properties mapping = new Properties();
 		mapping.load(in);
@@ -40,12 +52,20 @@ public class CommandExecuter {
 			Object cmd = Class.forName(clz).newInstance();
 			cmds.put(key, (Command) cmd);
 		}
+
+		// 初始化数据库连接池
+		in = CommandExecuter.class.getClassLoader().getResourceAsStream("db_config.xml");
+		Properties dbprop = new Properties();
+		dbprop.loadFromXML(in);
+
+		db = DBConnectionManager.getInstance().getDatabase(dbprop);
 	}
 
-	public static String cmd(String content) {
+	public static String cmd(RequestText request) {
+		String content = request.getContent();
 		String[] params = content.split(" ");
 		if (params.length == 0) {
-			return "命令无效";
+			return StringConstant.InvalidCommand;
 		}
 
 		String[] args = new String[params.length - 1];
@@ -54,9 +74,10 @@ public class CommandExecuter {
 		String key = params[0];
 		Command cmd = cmds.get(key);
 		if (cmd == null) {
-			return "命令无效";
+			return StringConstant.InvalidCommand;
 		} else {
-			return cmd.execute(args);
+			cmd.init(db);
+			return cmd.execute(args, request);
 		}
 	}
 

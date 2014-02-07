@@ -3,6 +3,9 @@
  */
 package com.sunny.weiweb.command;
 
+import com.pzoom.database.Database;
+import com.sunny.weiweb.message.RequestText;
+
 /**
  * 
  * 命令接口
@@ -14,5 +17,7 @@ package com.sunny.weiweb.command;
  */
 public interface Command {
 
-	public String execute(String[] args);
+	public String execute(String[] args,RequestText request);
+
+	public void init(Database db);
 }

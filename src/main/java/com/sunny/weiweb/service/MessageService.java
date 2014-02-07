@@ -53,13 +53,12 @@ public class MessageService {
 
 		if (req.getMsgType().equals(MessageType.text.name())) {
 			RequestText reqtext = (RequestText) req;
-			resp.setContent(CommandExecuter.cmd(reqtext.getContent()));
+			resp.setContent(CommandExecuter.cmd(reqtext));
 			return coder.encode(resp);
 		} else if (req.getMsgType().equals(MessageType.event.name())) {
 			RequestEvent reqEvent = (RequestEvent) req;
 			if (reqEvent.getEvent().equals(EventType.subscribe.name())) {
-				HelpCommand help = new HelpCommand();
-				resp.setContent("欢迎关注品众小助手," + help.execute(null));
+				resp.setContent("欢迎关注品众小助手,请使用命令 alias+空格+姓名 绑定账号后使用更多功能.");
 				return coder.encode(resp);
 			} else {
 				return "";
