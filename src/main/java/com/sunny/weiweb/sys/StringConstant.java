@@ -16,4 +16,5 @@ public class StringConstant {
 
 	public final static String InvalidCommand = "你说啥呀，我不懂！";
 	public final static String InternalError = "我擦,又异常了！你玩的啥啊？";
+	public final static String DB="db";
 }

@@ -3,7 +3,8 @@
  */
 package com.sunny.weiweb.sys;
 
-import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -11,6 +12,8 @@ import javax.servlet.ServletContextListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.pzoom.database.DBConnectionManager;
+import com.pzoom.database.Database;
 import com.sunny.weiweb.command.CommandExecuter;
 
 /**
@@ -44,6 +47,12 @@ public class ServiceInitListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
 		try {
+			// 初始化数据库连接池
+			InputStream in = CommandExecuter.class.getClassLoader().getResourceAsStream("db_config.xml");
+			Properties dbprop = new Properties();
+			dbprop.loadFromXML(in);
+			DBConnectionManager.getInstance().getDatabase(StringConstant.DB, dbprop);
+
 			CommandExecuter.init();
 		} catch (Exception e) {
 			logger.error("failed to init service. ", e);

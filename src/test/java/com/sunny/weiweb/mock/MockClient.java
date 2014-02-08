@@ -39,8 +39,9 @@ public class MockClient {
 	public static void main(String[] args) throws UnsupportedEncodingException, IOException {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost("http://localhost:8080/weiweb/Core.do");
+		httpPost.addHeader("Content-Type", "text/html;charset=utf-8");
 		String reqStr = readFile(new FileReader(new File("/Users/sunny/Desktop/request")));
-		HttpEntity content = new StringEntity(reqStr);
+		HttpEntity content = new StringEntity(reqStr, "utf-8");
 		httpPost.setEntity(content);
 		CloseableHttpResponse response = httpclient.execute(httpPost);
 		HttpEntity responseEntity = response.getEntity();

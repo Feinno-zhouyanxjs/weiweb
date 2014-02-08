@@ -17,7 +17,7 @@ import com.sunny.weiweb.service.MessageService;
 import com.sunny.weiweb.utils.SignUtil;
 
 @Controller
-public class CoreController {
+public class WeiXinCoreController {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -49,7 +49,7 @@ public class CoreController {
 		logger.info("received a message request.....");
 		try {
 			String res = msgService.process(request);
-			logger.info(res);
+			// logger.info(res);
 			return res;
 		} catch (IOException e) {
 			logger.error("process message. ", e);

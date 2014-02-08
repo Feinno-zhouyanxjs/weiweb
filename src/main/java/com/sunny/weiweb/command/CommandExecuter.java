@@ -53,12 +53,7 @@ public class CommandExecuter {
 			cmds.put(key, (Command) cmd);
 		}
 
-		// 初始化数据库连接池
-		in = CommandExecuter.class.getClassLoader().getResourceAsStream("db_config.xml");
-		Properties dbprop = new Properties();
-		dbprop.loadFromXML(in);
-
-		db = DBConnectionManager.getInstance().getDatabase(dbprop);
+		db = DBConnectionManager.getInstance().getDatabase(StringConstant.DB);
 	}
 
 	public static String cmd(RequestText request) {
