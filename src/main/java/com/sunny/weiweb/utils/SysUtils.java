@@ -18,9 +18,9 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:zhouyan@pzoomtech.com">ZhouYan</a>.
  * 
  */
-public class StringUtils {
+public class SysUtils {
 
-	private static Logger logger = LoggerFactory.getLogger(StringUtils.class);
+	private static Logger logger = LoggerFactory.getLogger(SysUtils.class);
 
 	/**
 	 * MD5加密
@@ -55,7 +55,4 @@ public class StringUtils {
 
 	}
 
-	public static void main(String[] args) {
-		System.out.println(StringUtils.toMD5("admin"));
-	}
 }

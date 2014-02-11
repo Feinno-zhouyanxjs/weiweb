@@ -8,7 +8,7 @@
 </head>
 <body>
 	<label>${requestScope.status}</label>
-	<form name="form1" method="post" action="Login.do">
+	<form name="form1" method="post" action="manager/Login.do">
 		<p>
 			<label for="userName">用户名</label> <input type="text" name="userName"
 				id="userName">
