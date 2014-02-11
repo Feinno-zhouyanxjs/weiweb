@@ -8,7 +8,7 @@
 </head>
 <body>
 	<label>${requestScope.status}</label>
-	<form name="form1" method="post" action="manager/Password.do">
+	<form name="form1" method="post" action="Password.do">
 		<p>
 			<label for="oldpassword">旧密码</label> <input type="password"
 				name="oldpassword" id="oldpassword">

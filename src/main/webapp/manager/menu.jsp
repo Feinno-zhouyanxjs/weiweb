@@ -6,6 +6,18 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title></title>
 </head>
-<body>暂时无菜单
+<body>
+	<label>${requestScope.status}</label>
+	<form name="form1" method="post" action="SetMenu.do">
+		<p>
+			<label for="menu">午餐菜单</label>
+		</p>
+		<p>
+			<textarea name="menu" id="menu" cols="85" rows="32">${requestScope.menu }</textarea>
+		</p>
+		<p>
+			<input type="submit" name="button" id="button" value="更新">
+		</p>
+	</form>
 </body>
 </html>

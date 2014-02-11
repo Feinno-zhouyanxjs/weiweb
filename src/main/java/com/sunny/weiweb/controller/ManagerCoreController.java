@@ -85,12 +85,12 @@ public class ManagerCoreController {
 		String newpwd2 = request.getParameter("newpassword2");
 		if (StringUtils.isEmpty(oldpwd) || StringUtils.isEmpty(newpwd) || StringUtils.isEmpty(newpwd2)) {
 			request.setAttribute("status", "密码不能为空");
-			return "password.jsp";
+			return "manager/password.jsp";
 		}
 
 		if (!newpwd.equals(newpwd2)) {
 			request.setAttribute("status", "两次密码输入一致");
-			return "password.jsp";
+			return "manager/password.jsp";
 		}
 
 		String cmd = "update Manager set Password=? where UserName=? and Password=?";
@@ -100,7 +100,7 @@ public class ManagerCoreController {
 			logger.error("", e);
 		}
 		request.setAttribute("status", "修改成功");
-		return "password.jsp";
+		return "manager/password.jsp";
 	}
 
 	@RequestMapping(value = "/manager/SetMenu.do", method = { RequestMethod.GET, RequestMethod.POST })
@@ -109,7 +109,7 @@ public class ManagerCoreController {
 		String menu = request.getParameter("menu");
 		if (StringUtils.isEmpty(menu)) {
 			request.setAttribute("status", "菜单内容不能为空");
-			return "menu.jsp";
+			return "manager/menu.jsp";
 		}
 
 		String menuCmd = "update Menus set CreatedTime = now() where MenuName = ?";
@@ -118,7 +118,7 @@ public class ManagerCoreController {
 		} catch (SQLException e) {
 			logger.error("", e);
 			request.setAttribute("status", "更新失败");
-			return "menu.jsp";
+			return "manager/menu.jsp";
 		}
 
 		String rmcmd = "delete from MenuItems";
@@ -127,7 +127,7 @@ public class ManagerCoreController {
 		} catch (SQLException e) {
 			logger.error("", e);
 			request.setAttribute("status", "清理菜单失败");
-			return "menu.jsp";
+			return "manager/menu.jsp";
 		}
 
 		StringReader sr = new StringReader(menu);
@@ -143,23 +143,24 @@ public class ManagerCoreController {
 		} catch (IOException e) {
 			logger.error("", e);
 			request.setAttribute("status", "解析菜单内容失败");
-			return "menu.jsp";
+			return "manager/menu.jsp";
 		} catch (SQLException e) {
 			logger.error("", e);
 			request.setAttribute("status", "解析菜单内容失败");
-			return "menu.jsp";
+			return "manager/menu.jsp";
 		} finally {
 			try {
 				br.close();
 			} catch (IOException e) {
 				logger.error("", e);
 				request.setAttribute("status", "IO异常");
-				return "menu.jsp";
+				return "manager/menu.jsp";
 			}
 		}
 
 		request.setAttribute("status", "成功");
-		return "menu.jsp";
+		request.setAttribute("menu", menu);
+		return "manager/menu.jsp";
 	}
 
 	@RequestMapping(value = "/manager/GetMenu.do", method = { RequestMethod.GET, RequestMethod.POST })
@@ -182,26 +183,26 @@ public class ManagerCoreController {
 		}
 
 		request.setAttribute("menu", sb.toString());
-		return "menu.jsp";
+		return "manager/menu.jsp";
 	}
 
 	@RequestMapping(value = "/manager/GetTodayOrder.do", method = { RequestMethod.GET, RequestMethod.POST })
 	public String getTodayOrder(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		StringBuffer usercmd = new StringBuffer();
-		usercmd.append("SELECT");
-		usercmd.append("Users.Alias,");
-		usercmd.append("group_concat(OrderItems.MenuItemName),");
-		usercmd.append("SUM(MenuItems.Price),");
-		usercmd.append("Orders.CreatedTime,");
-		usercmd.append("Orders.`Comment`");
-		usercmd.append("FROM");
-		usercmd.append("Orders");
-		usercmd.append("LEFT JOIN OrderItems ON Orders.ID = OrderItems.OrderID");
-		usercmd.append("LEFT JOIN Users ON Orders.OpenID = Users.OpenID");
-		usercmd.append("LEFT JOIN MenuItems ON OrderItems.MenuItemName = MenuItems.ItemName");
-		usercmd.append("WHERE to_days(Orders.CreatedTime) = to_days(now())");
-		usercmd.append("GROUP BY Users.Alias");
+		usercmd.append("SELECT ");
+		usercmd.append("Users.Alias, ");
+		usercmd.append("group_concat(OrderItems.MenuItemName) Menus, ");
+		usercmd.append("SUM(MenuItems.Price) Price, ");
+		usercmd.append("Orders.CreatedTime, ");
+		usercmd.append("Orders.`Comment` ");
+		usercmd.append("FROM ");
+		usercmd.append("Orders ");
+		usercmd.append("LEFT JOIN OrderItems ON Orders.ID = OrderItems.OrderID ");
+		usercmd.append("LEFT JOIN Users ON Orders.OpenID = Users.OpenID ");
+		usercmd.append("LEFT JOIN MenuItems ON OrderItems.MenuItemName = MenuItems.ItemName ");
+		usercmd.append("WHERE to_days(Orders.CreatedTime) = to_days(now()) ");
+		usercmd.append("GROUP BY Users.Alias ");
 
 		try {
 			DataTable userDataTable = db.executeQuery(usercmd.toString());
@@ -209,29 +210,29 @@ public class ManagerCoreController {
 		} catch (SQLException e) {
 			logger.error("", e);
 			request.setAttribute("status", "查询订单信息错误");
-			return "orders.jsp";
+			return "manager/orders.jsp";
 		}
 
 		StringBuffer menucmd = new StringBuffer();
-		menucmd.append("SELECT");
-		menucmd.append("OrderItems.MenuItemName,");
-		menucmd.append("SUM(MenuItems.Price)");
-		menucmd.append("FROM");
-		menucmd.append("OrderItems");
-		menucmd.append("LEFT JOIN MenuItems ON OrderItems.MenuItemName = MenuItems.ItemName");
-		menucmd.append("LEFT JOIN Orders ON Orders.ID = OrderItems.OrderID");
-		menucmd.append("WHERE to_days(Orders.CreatedTime) = to_days(now())");
-		menucmd.append("GROUP BY OrderItems.MenuItemName");
+		menucmd.append("SELECT ");
+		menucmd.append("OrderItems.MenuItemName, ");
+		menucmd.append("SUM(MenuItems.Price) Price ");
+		menucmd.append("FROM ");
+		menucmd.append("OrderItems ");
+		menucmd.append("LEFT JOIN MenuItems ON OrderItems.MenuItemName = MenuItems.ItemName ");
+		menucmd.append("LEFT JOIN Orders ON Orders.ID = OrderItems.OrderID ");
+		menucmd.append("WHERE to_days(Orders.CreatedTime) = to_days(now()) ");
+		menucmd.append("GROUP BY OrderItems.MenuItemName ");
 		try {
 			DataTable foodDataTable = db.executeQuery(menucmd.toString());
 			request.setAttribute("foodDataTable", foodDataTable);
 		} catch (SQLException e) {
 			logger.error("", e);
 			request.setAttribute("status", "查询订单信息错误");
-			return "orders.jsp";
+			return "manager/orders.jsp";
 		}
 
-		return "orders.jsp";
+		return "manager/orders.jsp";
 	}
 
 }
