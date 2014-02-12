@@ -25,7 +25,7 @@ public class OrderCommand implements Command {
 	@Override
 	public String execute(String[] args, RequestText request) {
 		// TODO Auto-generated method stub
-		return null;
+		return "";
 	}
 
 	/*

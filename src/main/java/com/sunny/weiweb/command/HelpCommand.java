@@ -24,7 +24,7 @@ public class HelpCommand implements Command {
 	 */
 	@Override
 	public String execute(String[] args, RequestText request) {
-		return "功能菜单如下:\r\n1.发送HELP获取功能菜单\r\n2.发送MENU获取当日午餐菜单\r\n3.发送ORDER获取当日订单状态";
+		return "功能菜单如下:\r\n1.发送?获取功能菜单\r\n2.发送menu获取当日午餐菜单\r\n3.发送list获取当日订单状态\r\n4.发送order+空格+菜单ID(多个用逗号分隔)[+空格+备注]";
 	}
 
 	/*

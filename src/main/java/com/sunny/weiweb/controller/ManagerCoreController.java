@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.pzoom.database.DBConnectionManager;
-import com.pzoom.database.DataRow;
 import com.pzoom.database.DataTable;
 import com.pzoom.database.Database;
 import com.pzoom.database.PrepareBatch;
+import com.sunny.weiweb.command.MenuCommand;
 import com.sunny.weiweb.sys.StringConstant;
 import com.sunny.weiweb.utils.SysUtils;
 
@@ -42,7 +42,7 @@ public class ManagerCoreController {
 
 	private Database db = DBConnectionManager.getInstance().getDatabase(StringConstant.DB);
 
-	private String menuName = "午餐";
+	public static String menuName = "午餐";
 
 	@RequestMapping(value = "/manager/Login.do", method = { RequestMethod.GET, RequestMethod.POST })
 	public String login(HttpServletRequest request, HttpServletResponse response) {
@@ -74,7 +74,7 @@ public class ManagerCoreController {
 	public String logout(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		request.getSession().removeAttribute("user");
-		return "login.jsp";
+		return "redirect:/login.jsp";
 	}
 
 	@RequestMapping(value = "/manager/Password.do", method = { RequestMethod.GET, RequestMethod.POST })
@@ -166,23 +166,15 @@ public class ManagerCoreController {
 	@RequestMapping(value = "/manager/GetMenu.do", method = { RequestMethod.GET, RequestMethod.POST })
 	public String getMenu(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
-		DataTable dt = null;
+		String content = "";
 		try {
-			dt = db.executeQuery("select ItemName,Price from MenuItems where MenuName = ?", menuName);
+			content = MenuCommand.getMenu(db);
 		} catch (SQLException e) {
 			logger.error("", e);
 			request.setAttribute("status", "查询菜单信息错误");
 		}
 
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < dt.getRowCount(); i++) {
-			DataRow dr = dt.getRow(i + 1);
-			String itemName = dr.getString("ItemName");
-			String price = dr.getString("Price");
-			sb.append(itemName + " " + price + "\r\n");
-		}
-
-		request.setAttribute("menu", sb.toString());
+		request.setAttribute("menu", content);
 		return "manager/menu.jsp";
 	}
 
@@ -190,17 +182,31 @@ public class ManagerCoreController {
 	public String getTodayOrder(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		StringBuffer usercmd = new StringBuffer();
+		// usercmd.append("SELECT ");
+		// usercmd.append("Users.Alias, ");
+		// usercmd.append("group_concat(OrderItems.MenuItemName) Menus, ");
+		// usercmd.append("SUM(MenuItems.Price) Price, ");
+		// usercmd.append("Orders.CreatedTime, ");
+		// usercmd.append("Orders.`Comment` ");
+		// usercmd.append("FROM ");
+		// usercmd.append("Orders ");
+		// usercmd.append("LEFT JOIN OrderItems ON Orders.ID = OrderItems.OrderID ");
+		// usercmd.append("LEFT JOIN Users ON Orders.OpenID = Users.OpenID ");
+		// usercmd.append("LEFT JOIN MenuItems ON OrderItems.MenuItemName = MenuItems.ItemName ");
+		// usercmd.append("WHERE to_days(Orders.CreatedTime) = to_days(now()) ");
+		// usercmd.append("GROUP BY Users.Alias ");
+
 		usercmd.append("SELECT ");
 		usercmd.append("Users.Alias, ");
-		usercmd.append("group_concat(OrderItems.MenuItemName) Menus, ");
-		usercmd.append("SUM(MenuItems.Price) Price, ");
+		usercmd.append("group_concat(MenuItems.ItemName) AS Menus, ");
+		usercmd.append("Sum(MenuItems.Price) AS Price, ");
 		usercmd.append("Orders.CreatedTime, ");
 		usercmd.append("Orders.`Comment` ");
 		usercmd.append("FROM ");
 		usercmd.append("Orders ");
 		usercmd.append("LEFT JOIN OrderItems ON Orders.ID = OrderItems.OrderID ");
 		usercmd.append("LEFT JOIN Users ON Orders.OpenID = Users.OpenID ");
-		usercmd.append("LEFT JOIN MenuItems ON OrderItems.MenuItemName = MenuItems.ItemName ");
+		usercmd.append("LEFT JOIN MenuItems ON OrderItems.MenuItemID = MenuItems.ID ");
 		usercmd.append("WHERE to_days(Orders.CreatedTime) = to_days(now()) ");
 		usercmd.append("GROUP BY Users.Alias ");
 
@@ -215,11 +221,11 @@ public class ManagerCoreController {
 
 		StringBuffer menucmd = new StringBuffer();
 		menucmd.append("SELECT ");
-		menucmd.append("OrderItems.MenuItemName, ");
+		menucmd.append("MenuItems.ItemName, ");
 		menucmd.append("SUM(MenuItems.Price) Price ");
 		menucmd.append("FROM ");
 		menucmd.append("OrderItems ");
-		menucmd.append("LEFT JOIN MenuItems ON OrderItems.MenuItemName = MenuItems.ItemName ");
+		menucmd.append("LEFT JOIN MenuItems ON OrderItems.MenuItemID = MenuItems.ID ");
 		menucmd.append("LEFT JOIN Orders ON Orders.ID = OrderItems.OrderID ");
 		menucmd.append("WHERE to_days(Orders.CreatedTime) = to_days(now()) ");
 		menucmd.append("GROUP BY OrderItems.MenuItemName ");

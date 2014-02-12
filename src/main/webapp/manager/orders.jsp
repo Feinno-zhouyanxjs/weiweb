@@ -62,7 +62,7 @@
 					sum += dr.getDouble("Price");
 		%>
 		<tr>
-			<td><%=dr.getString("MenuItemName")%></td>
+			<td><%=dr.getString("ItemName")%></td>
 			<td><%=dr.getString("Price")%></td>
 		</tr>
 		<%

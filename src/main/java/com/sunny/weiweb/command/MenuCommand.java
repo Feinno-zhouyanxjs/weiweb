@@ -3,8 +3,17 @@
  */
 package com.sunny.weiweb.command;
 
+import java.sql.SQLException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.pzoom.database.DataRow;
+import com.pzoom.database.DataTable;
 import com.pzoom.database.Database;
+import com.sunny.weiweb.controller.ManagerCoreController;
 import com.sunny.weiweb.message.RequestText;
+import com.sunny.weiweb.sys.StringConstant;
 
 /**
  * 
@@ -17,6 +26,10 @@ import com.sunny.weiweb.message.RequestText;
  */
 public class MenuCommand implements Command {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
+	private Database db;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -24,8 +37,12 @@ public class MenuCommand implements Command {
 	 */
 	@Override
 	public String execute(String[] args, RequestText request) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return getMenu(db);
+		} catch (SQLException e) {
+			logger.error("", e);
+			return StringConstant.InternalError;
+		}
 	}
 
 	/*
@@ -35,8 +52,23 @@ public class MenuCommand implements Command {
 	 */
 	@Override
 	public void init(Database db) {
-		// TODO Auto-generated method stub
+		this.db = db;
 
+	}
+
+	public static String getMenu(Database db) throws SQLException {
+		DataTable dt = null;
+		dt = db.executeQuery("select ID,ItemName,Price from MenuItems where MenuName = ?", ManagerCoreController.menuName);
+
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < dt.getRowCount(); i++) {
+			DataRow dr = dt.getRow(i + 1);
+			String id = dr.getString("ID");
+			String itemName = dr.getString("ItemName");
+			String price = dr.getString("Price");
+			sb.append(id + " " + itemName + " " + price + "\r\n");
+		}
+		return sb.toString();
 	}
 
 }

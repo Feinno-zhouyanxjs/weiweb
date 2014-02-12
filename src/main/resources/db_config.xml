@@ -2,7 +2,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<comment>c3p0-config</comment>
-	<entry key="jdbcUrl">jdbc:mysql://www.zhouyanweb.com:3306/WEIWEB?useUnicode=true&amp;characterEncoding=UTF-8&amp;mysqlEncoding=utf-8</entry>
+	<entry key="jdbcUrl">jdbc:mysql://www.zhouyanweb.com:3366/WEIWEB?useUnicode=true&amp;characterEncoding=UTF-8&amp;mysqlEncoding=utf-8</entry>
 	<entry key="driverClass">com.mysql.jdbc.Driver</entry>
 	<entry key="user">weiweb</entry>
 	<entry key="password">weiweb</entry>
