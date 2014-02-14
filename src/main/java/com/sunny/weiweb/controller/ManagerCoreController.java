@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.pzoom.database.DBConnectionManager;
+import com.pzoom.database.DataRow;
 import com.pzoom.database.DataTable;
 import com.pzoom.database.Database;
 import com.pzoom.database.PrepareBatch;
@@ -168,7 +169,17 @@ public class ManagerCoreController {
 		response.setContentType("text/html;charset=UTF-8");
 		String content = "";
 		try {
-			content = MenuCommand.getMenu(db);
+			DataTable dt = null;
+			dt = db.executeQuery("select ItemName,Price from MenuItems where MenuName = ?", ManagerCoreController.menuName);
+
+			StringBuffer sb = new StringBuffer();
+			for (int i = 0; i < dt.getRowCount(); i++) {
+				DataRow dr = dt.getRow(i + 1);
+				String itemName = dr.getString("ItemName");
+				String price = dr.getString("Price");
+				sb.append(itemName + " " + price + "\r\n");
+			}
+			content = sb.toString();
 		} catch (SQLException e) {
 			logger.error("", e);
 			request.setAttribute("status", "查询菜单信息错误");
