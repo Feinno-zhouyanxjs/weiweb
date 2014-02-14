@@ -67,7 +67,7 @@ public class ManagerCoreController {
 		}
 
 		request.getSession().setAttribute("user", userName);
-		return "manager/main.html";
+		return "redirect:main.html";
 	}
 
 	@RequestMapping(value = "/manager/Logout.do", method = { RequestMethod.GET, RequestMethod.POST })
