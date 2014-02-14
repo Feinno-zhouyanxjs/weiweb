@@ -1,6 +1,9 @@
 package com.sunny.weiweb.controller;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sunny.weiweb.command.AliasCommand;
 import com.sunny.weiweb.service.MessageService;
 import com.sunny.weiweb.utils.SignUtil;
 
@@ -47,6 +51,7 @@ public class WeiXinCoreController {
 	public String message(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/plain;charset=UTF-8");
 		logger.info("received a message request.....");
+
 		try {
 			String res = msgService.process(request);
 			// logger.info(res);

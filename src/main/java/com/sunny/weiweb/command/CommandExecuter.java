@@ -11,6 +11,9 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.pzoom.database.DBConnectionManager;
 import com.pzoom.database.Database;
 import com.sunny.weiweb.message.RequestText;
@@ -31,6 +34,8 @@ public class CommandExecuter {
 	 * 数据库操作接口
 	 */
 	private static Database db;
+
+	private static Logger logger = LoggerFactory.getLogger(CommandExecuter.class);
 
 	/**
 	 * 命令处理器缓存
@@ -57,6 +62,15 @@ public class CommandExecuter {
 	}
 
 	public static String cmd(RequestText request) {
+		try {
+			if (!AliasCommand.valid(request.getFromUserName(), db)) {
+				return "请使用命令 alias+空格+姓名绑定账号后使用更多功能.";
+			}
+		} catch (SQLException e) {
+			logger.error("", e);
+			return StringConstant.InternalError;
+		}
+
 		String content = request.getContent();
 		String[] params = content.split(" ");
 		if (params.length == 0) {
@@ -75,5 +89,4 @@ public class CommandExecuter {
 			return cmd.execute(args, request);
 		}
 	}
-
 }

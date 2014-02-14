@@ -12,6 +12,7 @@ import org.dom4j.DocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sunny.weiweb.command.AliasCommand;
 import com.sunny.weiweb.command.CommandExecuter;
 import com.sunny.weiweb.message.Code;
 import com.sunny.weiweb.message.EventType;
