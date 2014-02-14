@@ -27,6 +27,8 @@ import com.sunny.weiweb.sys.StringConstant;
  */
 public class AliasCommand implements Command {
 
+	public final static String cmd = "alias";
+
 	private Database db;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());

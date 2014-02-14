@@ -62,15 +62,6 @@ public class CommandExecuter {
 	}
 
 	public static String cmd(RequestText request) {
-		try {
-			if (!AliasCommand.valid(request.getFromUserName(), db)) {
-				return "请使用命令 alias+空格+姓名绑定账号后使用更多功能.";
-			}
-		} catch (SQLException e) {
-			logger.error("", e);
-			return StringConstant.InternalError;
-		}
-
 		String content = request.getContent();
 		String[] params = content.split(" ");
 		if (params.length == 0) {
@@ -81,6 +72,16 @@ public class CommandExecuter {
 		System.arraycopy(params, 1, args, 0, args.length);
 
 		String key = params[0];
+		// 发送的命令非别名时，验证是否绑定
+		try {
+			if (!key.equals(AliasCommand.cmd) && !AliasCommand.valid(request.getFromUserName(), db)) {
+				return "请使用命令 alias+空格+姓名绑定账号后使用更多功能.";
+			}
+		} catch (SQLException e) {
+			logger.error("", e);
+			return StringConstant.InternalError;
+		}
+
 		Command cmd = cmds.get(key);
 		if (cmd == null) {
 			return StringConstant.InvalidCommand;
