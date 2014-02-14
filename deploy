@@ -2,5 +2,6 @@
 
 git pull origin master
 mvn package -Dmaven.test.skip=true
+rm -rf /root/Env/apache-tomcat-7.0.50/webapps/weiweb
 cp ./target/weiweb.war /root/Env/apache-tomcat-7.0.50/webapps/
 echo finish
