@@ -2,6 +2,7 @@ package com.sunny.weiweb.command;
 
 import java.sql.SQLException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,30 +29,25 @@ public class BoughtListCommand implements Command {
 
 	@Override
 	public String execute(String[] args, RequestText request) {
-		StringBuffer usercmd = new StringBuffer();
-		usercmd.append("SELECT ");
-		usercmd.append("group_concat(OrderItems.MenuItemName) Menus, ");
-		usercmd.append("SUM(MenuItems.Price) Price, ");
-		// usercmd.append("Orders.CreatedTime, ");
-		// usercmd.append("Orders.`Comment` ");
-		usercmd.append("FROM ");
-		usercmd.append("Orders ");
-		usercmd.append("LEFT JOIN OrderItems ON Orders.ID = OrderItems.OrderID ");
-		usercmd.append("LEFT JOIN Users ON Orders.OpenID = Users.OpenID ");
-		usercmd.append("LEFT JOIN MenuItems ON OrderItems.MenuItemName = MenuItems.ItemName ");
-		usercmd.append("WHERE to_days(Orders.CreatedTime) = to_days(now()) and Orders.OpenID=? ");
+		String usercmd = "SELECT " + "MenuItems.ItemName Menus, " + "COUNT(MenuItems.ItemName) count, " + "	SUM(MenuItems.Price) Price " + "FROM " + "Orders " + "INNER JOIN OrderItems ON Orders.ID = OrderItems.OrderID " + "LEFT JOIN Users ON Orders.OpenID = Users.OpenID "
+				+ "LEFT JOIN MenuItems ON OrderItems.MenuItemID = MenuItems.ID " + "WHERE " + "to_days(Orders.CreatedTime)= to_days(now()) " + "AND Orders.OpenID = ? " + "GROUP BY " + "MenuItems.ItemName ";
 
 		try {
 			DataTable userDataTable = db.executeQuery(usercmd.toString(), request.getFromUserName());
-			StringBuffer sb = new StringBuffer();
-			double sum = 0;
-			for (int i = 0; i < userDataTable.getRowCount(); i++) {
-				DataRow dr = userDataTable.getRow(i + 1);
-				sb.append(dr.getString("Menus") + " " + dr.getString("Price") + "\r\n");
-				sum += dr.getDouble("Price");
+			if (userDataTable.getRowCount() > 0 && !StringUtils.isEmpty(userDataTable.getRow(1).getString("Menus"))) {
+				StringBuffer sb = new StringBuffer();
+				sb.append("当天订单:\r\n");
+				double sum = 0;
+				for (int i = 0; i < userDataTable.getRowCount(); i++) {
+					DataRow dr = userDataTable.getRow(i + 1);
+					sb.append(dr.getString("Menus") + "*" + dr.getString("count") + " " + dr.getString("Price") + "\r\n");
+					sum += dr.getDouble("Price");
+				}
+				sb.append("合计：" + sum);
+				return sb.toString();
+			} else {
+				return "当天暂无订单";
 			}
-			sb.append("合计：" + sum);
-			return sb.toString();
 		} catch (SQLException e) {
 			logger.error("", e);
 			return StringConstant.InternalError;

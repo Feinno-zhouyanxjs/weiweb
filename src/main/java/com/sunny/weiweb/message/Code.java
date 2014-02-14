@@ -6,6 +6,7 @@ package com.sunny.weiweb.message;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,6 +14,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
@@ -36,7 +38,11 @@ public class Code {
 		root.addElement("MsgType").addCDATA(resp.getMsgType());
 		root.addElement("Content").addCDATA(resp.getContent());
 		ByteArrayOutputStream strout = new ByteArrayOutputStream();
-		XMLWriter writer = new XMLWriter(strout);
+		PrintWriter pw = new PrintWriter(strout);
+		OutputFormat outFormat = OutputFormat.createPrettyPrint();
+		outFormat.setEncoding("UTF-8");
+		outFormat.setTrimText(false);
+		XMLWriter writer = new XMLWriter(pw, outFormat);
 		writer.write(document);
 		writer.flush();
 		writer.close();

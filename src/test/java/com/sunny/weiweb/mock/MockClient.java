@@ -40,7 +40,7 @@ public class MockClient {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost("http://localhost:8080/weiweb/Core.do");
 		httpPost.addHeader("Content-Type", "text/html;charset=utf-8");
-		String reqStr = readFile(new FileReader(new File("/Users/sunny/Desktop/request")));
+		String reqStr = readFile(new FileReader(new File("F:/request.txt")));
 		HttpEntity content = new StringEntity(reqStr, "utf-8");
 		httpPost.setEntity(content);
 		CloseableHttpResponse response = httpclient.execute(httpPost);

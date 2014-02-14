@@ -210,6 +210,11 @@ public class ManagerCoreController {
 		usercmd.append("WHERE to_days(Orders.CreatedTime) = to_days(now()) ");
 		usercmd.append("GROUP BY Users.Alias ");
 
+		// 统计菜品数量
+		// String usercmd = "SELECT " + "Users.Alias, " + "	MenuItems.ItemName AS Menus, " + "COUNT(MenuItems.ItemName) AS count, " + "	Sum(MenuItems.Price)AS Price, " + "Orders.CreatedTime, " + "	Orders.`Comment` " + "FROM " + "Orders "
+		// + "INNER JOIN OrderItems ON Orders.ID = OrderItems.OrderID " + "LEFT JOIN Users ON Orders.OpenID = Users.OpenID " + "LEFT JOIN MenuItems ON OrderItems.MenuItemID = MenuItems.ID " + "WHERE " + "to_days(Orders.CreatedTime)= to_days(now()) " + "GROUP BY "
+		// + "Users.Alias,MenuItems.ItemName ";
+
 		try {
 			DataTable userDataTable = db.executeQuery(usercmd.toString());
 			request.setAttribute("userDataTable", userDataTable);
@@ -228,7 +233,7 @@ public class ManagerCoreController {
 		menucmd.append("LEFT JOIN MenuItems ON OrderItems.MenuItemID = MenuItems.ID ");
 		menucmd.append("LEFT JOIN Orders ON Orders.ID = OrderItems.OrderID ");
 		menucmd.append("WHERE to_days(Orders.CreatedTime) = to_days(now()) ");
-		menucmd.append("GROUP BY OrderItems.MenuItemName ");
+		menucmd.append("GROUP BY MenuItems.ItemName ");
 		try {
 			DataTable foodDataTable = db.executeQuery(menucmd.toString());
 			request.setAttribute("foodDataTable", foodDataTable);

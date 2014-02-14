@@ -45,7 +45,7 @@ public class WeiXinCoreController {
 	@ResponseBody
 	@RequestMapping(value = "/Core.do", method = RequestMethod.POST)
 	public String message(HttpServletRequest request, HttpServletResponse response) {
-		// response.setContentType("text/plain;charset=UTF-8");
+		response.setContentType("text/plain;charset=UTF-8");
 		logger.info("received a message request.....");
 		try {
 			String res = msgService.process(request);
