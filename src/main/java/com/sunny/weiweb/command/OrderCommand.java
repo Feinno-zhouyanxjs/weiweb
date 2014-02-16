@@ -8,8 +8,10 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.pzoom.database.DataTable;
 import com.pzoom.database.DataTransaction;
 import com.pzoom.database.Database;
+import com.sunny.weiweb.controller.ManagerCoreController;
 import com.sunny.weiweb.message.RequestText;
 import com.sunny.weiweb.sys.StringConstant;
 
@@ -31,21 +33,41 @@ public class OrderCommand implements Command {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.sunny.weiweb.command.Command#execute(java.lang.String[],
-	 * com.sunny.weiweb.message.RequestText)
+	 * @see com.sunny.weiweb.command.Command#execute(java.lang.String[], com.sunny.weiweb.message.RequestText)
 	 */
 	@Override
 	public String execute(String[] args, RequestText request) {
 		String openID = request.getFromUserName();
 		String comment = "";
 		String[] ids = null;
-		if (args.length > 1) {
-			comment = args[1];
+		if (args.length > 0) {
 			ids = args[0].split(",");
+		} else {
+			return "请提交您要吃的菜单ID";
 		}
 
+		if (args.length > 1)
+			comment = args[1];
+
+		String checkcmd = "select ID from MenuItems where MenuName = '" + ManagerCoreController.menuName + "' and ID in ";
 		String ordercmd = "insert into Orders (OpenID,CreatedTime,Comment) values (?,now(),?)";
 		String itemscmd = "insert into OrderItems (OrderID,MenuItemID) values (?,?)";
+
+		String checkids = "(";
+		for (int i = 0; i < ids.length; i++) {
+			checkids += ids[i] + ",";
+		}
+		checkids = checkids.substring(0, checkids.length() - 1);
+		checkids += ")";
+
+		try {
+			DataTable dt = db.executeQuery(checkcmd + checkids);
+			if (dt.getRowCount() == 0)
+				return "请输入正确的菜单ID";
+		} catch (SQLException e2) {
+			logger.error("", e2);
+			return StringConstant.InternalError;
+		}
 
 		DataTransaction trans = db.createTransaction();
 		try {
@@ -57,7 +79,7 @@ public class OrderCommand implements Command {
 			}
 
 			trans.commit();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			try {
 				trans.rollback();
 			} catch (SQLException e1) {
