@@ -27,6 +27,14 @@
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>*.do</url-pattern>
 	</filter-mapping>
+	<filter>
+		<filter-name>securityFilter</filter-name>
+		<filter-class>com.sunny.weiweb.sys.SecurityFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>securityFilter</filter-name>
+		<url-pattern>/manager/*</url-pattern>
+	</filter-mapping>
 	<servlet>
 		<servlet-name>weiweb</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>

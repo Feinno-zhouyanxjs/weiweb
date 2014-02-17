@@ -50,6 +50,7 @@
 	<table width="0" border="0">
 		<tr>
 			<th scope="col">菜单</th>
+			<th scope="col">数量</th>
 			<th scope="col">合计</th>
 		</tr>
 		<%
@@ -63,13 +64,14 @@
 		%>
 		<tr>
 			<td><%=dr.getString("ItemName")%></td>
+			<td><%=dr.getString("Count")%></td>
 			<td><%=dr.getString("Price")%></td>
 		</tr>
 		<%
 			}
 		%>
 		<tr>
-			<td colspan="2" align="right">总和：<%=sum%></td>
+			<td colspan="3" align="right">总和：<%=sum%></td>
 		</tr>
 		<%
 			}

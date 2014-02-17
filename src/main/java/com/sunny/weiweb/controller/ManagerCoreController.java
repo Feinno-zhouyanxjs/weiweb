@@ -237,6 +237,7 @@ public class ManagerCoreController {
 		StringBuffer menucmd = new StringBuffer();
 		menucmd.append("SELECT ");
 		menucmd.append("MenuItems.ItemName, ");
+		menucmd.append("COUNT(MenuItems.ItemName) Count, ");
 		menucmd.append("SUM(MenuItems.Price) Price ");
 		menucmd.append("FROM ");
 		menucmd.append("OrderItems ");
