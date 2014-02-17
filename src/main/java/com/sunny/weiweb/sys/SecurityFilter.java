@@ -45,9 +45,10 @@ public class SecurityFilter implements Filter {
 	 */
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		String reqUri = ((HttpServletRequest) request).getRequestURI();
 		Object user = ((HttpServletRequest) request).getSession().getAttribute("user");
 		String cp = ((HttpServletRequest) request).getContextPath();
-		if (user != null && StringUtils.isEmpty(user.toString())) {
+		if ((user != null && !StringUtils.isEmpty(user.toString())) || reqUri.endsWith("Login.do")) {
 			chain.doFilter(request, response);
 		} else {
 			((HttpServletResponse) response).sendRedirect(cp + "/login.jsp");

@@ -7,7 +7,7 @@
 <title>管理员登陆</title>
 </head>
 <body>
-	<label>${requestScope.status}</label>
+	<label>${sessionScope.status}</label>
 	<form name="form1" method="post" action="manager/Login.do">
 		<p>
 			<label for="userName">用户名</label> <input type="text" name="userName"
@@ -21,5 +21,8 @@
 			<input type="submit" name="button" id="button" value="登陆">
 		</p>
 	</form>
+	<%
+		request.getSession().setAttribute("status", "");
+	%>
 </body>
 </html>

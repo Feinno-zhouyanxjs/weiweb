@@ -50,8 +50,8 @@ public class ManagerCoreController {
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
 		if (userName == null || userName.equals("") || password == null || password.equals("")) {
-			request.setAttribute("status", "用户名密码不能为空");
-			return "login.jsp";
+			request.getSession().setAttribute("status", "用户名密码不能为空");
+			return "redirect:../login.jsp";
 		}
 
 		String cmd = "select UserName from Manager where UserName=? and Password=?";
@@ -59,8 +59,8 @@ public class ManagerCoreController {
 			String pw = SysUtils.toMD5(password);
 			DataTable dt = db.executeQuery(cmd, userName, pw);
 			if (dt.getRowCount() == 0) {
-				request.setAttribute("status", "用户名或密码不正确");
-				return "login.jsp";
+				request.getSession().setAttribute("status", "用户名或密码不正确");
+				return "redirect:../login.jsp";
 			}
 		} catch (SQLException e) {
 			logger.error("", e);
