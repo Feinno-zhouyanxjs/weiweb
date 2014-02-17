@@ -41,8 +41,8 @@ public class DeleteCommand implements Command {
 			DataTable dt = db.executeQuery("select ID from Orders where OpenID=? and to_days(Orders.CreatedTime)= to_days(now()) ", fromUser);
 			if (dt.getRowCount() > 0) {
 				id = dt.getRow(1).getInt("ID");
-				db.executeQuery("delete from OrderItems where OrderID=?", id);
-				db.executeQuery("delete from Orders where ID=?", id);
+				db.executeUpdate("delete from OrderItems where OrderID=?", id);
+				db.executeUpdate("delete from Orders where ID=?", id);
 			}
 		} catch (SQLException e) {
 			logger.error("", e);
